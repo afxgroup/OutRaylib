@@ -2,13 +2,20 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "wsl.exe",
+            }
+        }
+    },
     "tasks": [
         {
             "label": "build debug",
             "type": "process",
             "command": "make",
             "windows": {
-                "command": "mingw32-make.exe",
+                "command": "make",
             },
             "osx": {
                 "args": [
@@ -29,7 +36,6 @@
             "type": "process",
             "command": "make",
             "windows": {
-                "command": "mingw32-make.exe",
                 "args": [
                     "config=release_x64"
                 ],
@@ -55,7 +61,6 @@
             "type": "process",
             "command": "make",
             "windows": {
-                "command": "mingw32-make.exe",
                 "args": [
                     "clean"
                 ],
@@ -87,7 +92,7 @@
                 "gmake2"
             ],
             "windows": {
-                "command": "./premake5.exe"
+                "command": "./premake5"
             },
             "linux": {
                 "command": "./premake5"
