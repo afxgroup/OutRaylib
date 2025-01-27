@@ -8,7 +8,7 @@
 #include <cstdlib>
 
 // Funzione per disegnare un poligono
-void DrawPolygon(Color color, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+void Drawing::DrawPolygon(Color color, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 {
     Vector2 vertices[] = {{x1, y1}, {x2, y2}, {x3, y3}, {x4, y4}};
     DrawTriangle(vertices[0], vertices[1], vertices[2], color);
@@ -16,7 +16,7 @@ void DrawPolygon(Color color, float x1, float y1, float x2, float y2, float x3, 
 }
 
 // Funzione per disegnare un segmento di strada
-void DrawSegment(int screenWidth, int _lanes, float x1, float y1, float w1, float x2, float y2, float w2, float fog, const Colors &color)
+void Drawing::DrawSegment(int screenWidth, int _lanes, float x1, float y1, float w1, float x2, float y2, float w2, float fog, const Colors &color)
 {
     float r1 = w1 / std::max(6.0f, 2.0f * _lanes);
     float r2 = w2 / std::max(6.0f, 2.0f * _lanes);
@@ -51,7 +51,7 @@ void DrawSegment(int screenWidth, int _lanes, float x1, float y1, float w1, floa
 }
 
 // Funzione per disegnare un elemento di sfondo
-void DrawBackground(const Texture2D &_background, int _width, int _height, const Sprite &layer, float rotation = 0.0f, float offset = 0.0f)
+void Drawing::DrawBackground(const Texture2D &_background, int _width, int _height, const Sprite &layer, float rotation = 0.0f, float offset = 0.0f)
 {
     int imageW = layer.w / 2;
     int imageH = layer.h;
@@ -73,7 +73,7 @@ void DrawBackground(const Texture2D &_background, int _width, int _height, const
 }
 
 // Funzione per disegnare uno sprite
-void DrawSprite(const Texture2D &spriteSheet, int screenWidth, int screenHeight, float _resolution, float _roadWidth,
+void Drawing::DrawSprite(const Texture2D &spriteSheet, int screenWidth, int screenHeight, float _resolution, float _roadWidth,
                 const Sprite &sprite, float scale, float destX, float destY, float offsetX = 0.0f, float offsetY = 0.0f, float clipY = 0.0f)
 {
     float destW = (sprite.w * scale * screenWidth / 2) * SPRITE_SCALE * _roadWidth;
@@ -92,7 +92,7 @@ void DrawSprite(const Texture2D &spriteSheet, int screenWidth, int screenHeight,
 }
 
 // Funzione per disegnare la nebbia
-void DrawFog(int x, int y, int _width, int _height, float fogIntensity)
+void Drawing::DrawFog(int x, int y, int _width, int _height, float fogIntensity)
 {
     if (fogIntensity < 1.0f)
     {
@@ -101,7 +101,7 @@ void DrawFog(int x, int y, int _width, int _height, float fogIntensity)
     }
 }
 
-void DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, float _roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown)
+void Drawing::DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, float _roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown)
 {
     float bounce = (1.5f * static_cast<float>(rand()) / RAND_MAX * speedPercent * _resolution) * ((rand() % 2) == 0 ? -1 : 1);
     Sprite sprite;
@@ -116,9 +116,3 @@ void DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, f
     DrawSprite(texture, _width, _height, _resolution, _roadWidth, sprite, scale, destX, destY + bounce, -0.5f, -1.0f);
 }
 
-void UpdateHud(std::string key, std::string value, int _width) {
-    if (key == "speed")
-        DrawText(value.c_str(), _width - 90, 15, 24, BLACK);
-    else if (key == "current_lap_time")        
-        DrawText(value.c_str(), 20, 15, 24, BLACK);
-}

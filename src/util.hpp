@@ -1,3 +1,6 @@
+#ifndef __UTIL_HPP__
+#define __UTIL_HPP__
+
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -6,7 +9,6 @@
 #include <string>
 
 #include "common.hpp"
-#include "constants.hpp"
 
 class Util
 {
@@ -101,8 +103,7 @@ public:
     // Nebbia esponenziale
     static float exponentialFog(float distance, float density)
     {
-        float fog = 1.0f / std::exp(distance * distance * density);
-        return fog;
+        return 1.0f / std::exp(distance * distance * density);
     }
 
     // Incremento ciclico
@@ -138,4 +139,24 @@ public:
         float max2 = x2 + (w2 * half);
         return !(max1 < min2 || min1 > max2);
     }
+
+    static std::string formatTime(float dt)
+    {
+        int minutes = static_cast<int>(std::floor(dt / 60));
+        int seconds = static_cast<int>(std::floor(dt - (minutes * 60)));
+        int tenths = static_cast<int>(std::floor(10 * (dt - std::floor(dt))));
+
+        if (minutes > 0)
+        {
+            return std::to_string(minutes) + "." +
+                   (seconds < 10 ? "0" : "") + std::to_string(seconds) + "." +
+                   std::to_string(tenths);
+        }
+        else
+        {
+            return std::to_string(seconds) + "." + std::to_string(tenths);
+        }
+    }
 };
+
+#endif
