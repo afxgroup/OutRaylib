@@ -2,6 +2,7 @@
 #define __DRAWING_HPP__
 
 #include "raylib.h"
+#include "util.hpp"
 
 class Drawing {
     public:

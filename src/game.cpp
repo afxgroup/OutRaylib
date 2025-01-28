@@ -27,7 +27,13 @@ void Game::saveScore()
 // Funzione di utilità per verificare se due oggetti si sovrappongono
 void Game::init()
 {
-    std::map<std::string, int> options = {};
+    std::map<std::string, std::string> options = {};
+    std::ifstream f("options.json");
+    if (f.good())
+    {
+        json data = json::parse(f);
+        options = data.get<std::map<std::string, std::string>>();
+    }
     loadOptions(options);
 
     // Inizializzazione della finestra
@@ -39,10 +45,10 @@ void Game::init()
     loadScore();
 
     audio.init();
-    audio.loadTrack("resources/music/music.mp3");
+    audio.loadTrack(tracks[0].c_str());
     audio.playTrack();
 
-    fontTtf = LoadFontEx("resources/font/retro.ttf", 24, 0, 250);
+    fontTtf = LoadFontEx("resources/font/Retroica.ttf", 24, 0, 250);
 }
 
 void Game::destroy()
@@ -260,6 +266,16 @@ void Game::pollKeys()
 
     if (IsKeyPressed(KEY_M))
         audio.toggleAudio();
+
+    if (IsKeyPressed(KEY_ONE))
+    {
+        currentTrack++;
+        if (currentTrack == tracks.size())
+            currentTrack = 0;
+        audio.unloadTrack();
+        audio.loadTrack(tracks[currentTrack].c_str());
+        audio.playTrack();
+    }
 }
 
 void Game::frame()
@@ -502,7 +518,7 @@ void Game::updateCars(float dt, Segment &playerSegment, float playerW)
 float Game::updateCarOffset(Car &car, Segment &carSegment, Segment &playerSegment, float playerW)
 {
     const int lookahead = 20;  // Distanza di previsione
-    float carW = car.sprite.w; // Larghezza dell'auto
+    float carW = car.sprite.w * SPRITE_SCALE; // Larghezza dell'auto
 
     // Ottimizzazione: ignora le auto fuori dalla vista del giocatore
     if ((carSegment.index - playerSegment.index) > drawDistance)
@@ -595,22 +611,22 @@ void Game::resetSprites()
     // Aggiungi sprite a intervalli casuali
     for (int n = 10; n < 200; n += 4 + n / 100)
     {
-        addSprite(n, SPRITES::PALM_TREE, 0.5f + static_cast<float>(rand()) / RAND_MAX * 0.5f);
-        addSprite(n, SPRITES::PALM_TREE, 1.0f + static_cast<float>(rand()) / RAND_MAX * 2.0f);
+        addSprite(n, SPRITES::PALM_TREE, 0.5f + Util::randomFloat() * 0.5f);
+        addSprite(n, SPRITES::PALM_TREE, 1.0f + Util::randomFloat() * 2.0f);
     }
 
     // Aggiungi colonne e alberi
     for (int n = 250; n < 1000; n += 5)
     {
         addSprite(n, SPRITES::COLUMN, 1.1f);
-        addSprite(n + Util::randomInt(0, 5), SPRITES::TREE1, -1.0f - static_cast<float>(rand()) / RAND_MAX * 2.0f);
-        addSprite(n + Util::randomInt(0, 5), SPRITES::TREE2, -1.0f - static_cast<float>(rand()) / RAND_MAX * 2.0f);
+        addSprite(n + Util::randomInt(0, 5), SPRITES::TREE1, -1.0f - Util::randomFloat() * 2.0f);
+        addSprite(n + Util::randomInt(0, 5), SPRITES::TREE2, -1.0f - Util::randomFloat() * 2.0f);
     }
 
     // Aggiungi piante
     for (int n = 200; n < segments.size(); n += 3)
     {
-        addSprite(n, Util::randomChoice(PLANTS), Util::randomChoice(choices) * (2.0f + static_cast<float>(rand()) / RAND_MAX * 5.0f));
+        addSprite(n, Util::randomChoice(PLANTS), Util::randomChoice(choices) * (2.0f + Util::randomFloat() * 5.0f));
     }
 
     // Aggiungi sprite complessi
@@ -622,7 +638,7 @@ void Game::resetSprites()
         for (int i = 0; i < 20; ++i)
         {
             Sprite sprite = Util::randomChoice(PLANTS);
-            float offset = side * (1.5f + static_cast<float>(rand()) / RAND_MAX);
+            float offset = side * (1.5f + Util::randomFloat());
             addSprite(n + Util::randomInt(0, 50), sprite, offset);
         }
     }
@@ -681,10 +697,10 @@ void Game::resetCars()
     for (int n = 0; n < totalCars; n++)
     {
         // Calcola l'offset casuale e scegli un lato casuale
-        float offset = static_cast<float>(rand()) / RAND_MAX * Util::randomChoice(std::vector<float>{-0.8f, 0.8f});
+        float offset = Util::randomFloat() * Util::randomChoice(std::vector<float>{-0.8f, 0.8f});
 
         // Calcola la posizione z casuale
-        int z = static_cast<float>(rand()) / RAND_MAX * static_cast<float>(segments.size()) * segmentLength;
+        int z = Util::randomFloat() * static_cast<float>(segments.size()) * segmentLength;
 
         // Seleziona uno sprite casuale
         Sprite sprite = Util::randomChoice(CARS);
@@ -696,8 +712,7 @@ void Game::resetCars()
             sprite.w == SPRITES::SEMI.w)
             c = 4.0f;
         // Calcola la velocità dell'auto
-        _speed = maxSpeed / 4.0f +
-                 static_cast<float>(rand()) / RAND_MAX * maxSpeed / c;
+        _speed = maxSpeed / 4.0f + Util::randomFloat() * maxSpeed / c;
 
         // Crea l'auto
         Car car = {n, offset, z, sprite, _speed, 0.0f};
@@ -711,19 +726,19 @@ void Game::resetCars()
     }
 }
 
-void Game::loadOptions(std::map<std::string, int> options)
+void Game::loadOptions(std::map<std::string, std::string> options)
 {
     // Leggi o usa i valori di default
-    width = options.count("width") ? options["width"] : 1024;
-    height = options.count("height") ? options["height"] : 768;
-    lanes = options.count("lanes") ? options["lanes"] : 3;
-    roadWidth = options.count("roadWidth") ? options["roadWidth"] : 2000.0f;
-    cameraHeight = options.count("cameraHeight") ? options["cameraHeight"] : 1000.0f;
-    drawDistance = options.count("drawDistance") ? options["drawDistance"] : 300;
-    fogDensity = options.count("fogDensity") ? options["fogDensity"] : 5.0f;
-    fieldOfView = options.count("fieldOfView") ? options["fieldOfView"] : 100.0f;
-    segmentLength = options.count("segmentLength") ? options["segmentLength"] : 200.0f;
-    rumbleLength = options.count("rumbleLength") ? options["rumbleLength"] : 3;
+    width = options.count("width") ? Util::toInt(options["width"], 1024) : 1024;
+    height = options.count("height") ? Util::toInt(options["height"], 768) : 768;
+    lanes = options.count("lanes") ? Util::toInt(options["lanes"],3) : 3;
+    roadWidth = options.count("roadWidth") ? Util::toFloat(options["roadWidth"], 2000.0f) : 2000.0f;
+    cameraHeight = options.count("cameraHeight") ? Util::toFloat(options["cameraHeight"], 1000.0f) : 1000.0f;
+    drawDistance = options.count("drawDistance") ? Util::toInt(options["drawDistance"], 300) : 300;
+    fogDensity = options.count("fogDensity") ? Util::toFloat(options["fogDensity"], 5.0f) : 5.0f;
+    fieldOfView = options.count("fieldOfView") ? Util::toFloat(options["fieldOfView"], 100.0f) : 100.0f;
+    segmentLength = options.count("segmentLength") ? Util::toFloat(options["segmentLength"], 200.0f) : 200.0f;
+    rumbleLength = options.count("rumbleLength") ? Util::toInt(options["rumbleLength"], 3) : 3;
 
     // Calcoli aggiuntivi
     cameraDepth = 1 / std::tan((fieldOfView / 2.0f) * (M_PI / 180.0f));

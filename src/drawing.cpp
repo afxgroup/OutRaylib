@@ -3,8 +3,6 @@
 #include "common.hpp"
 #include "drawing.hpp"
 
-#include <cmath>
-#include <vector>
 #include <cstdlib>
 
 // Funzione per disegnare un poligono
@@ -108,7 +106,7 @@ void Drawing::DrawFog(int x, int y, int _width, int _height, float fogIntensity)
 
 void Drawing::DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, float _roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown)
 {
-    float bounce = (1.5f * static_cast<float>(rand()) / RAND_MAX * speedPercent * _resolution) * ((rand() % 2) == 0 ? -1 : 1);
+    float bounce = (1.5f * Util::randomFloat() * speedPercent * _resolution) * ((rand() % 2) == 0 ? -1 : 1);
     Sprite sprite;
 
     if (steer < 0)

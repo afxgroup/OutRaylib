@@ -25,7 +25,7 @@ public:
     void frame();
     void pollKeys();
 
-    void loadOptions(std::map<std::string, int> options);
+    void loadOptions(std::map<std::string, std::string> options);
 
     void updateAudioTrack();
     void unloadAudioTrack();
@@ -114,6 +114,9 @@ private:
 
     void addSegment(float curve, float y);
     Segment &findSegment(float z);
+
+    std::vector<std::string> tracks = { "resources/music/track1.mp3", "resources/music/track2.mp3", "resources/music/track3.mp3" };
+    int currentTrack = 0;
 };
 
 #endif

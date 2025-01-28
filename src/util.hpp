@@ -19,6 +19,10 @@ public:
         return static_cast<long long>(std::time(nullptr)) * 1000;
     }
 
+    static float randomFloat() {
+        return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    }
+
     // Converte un valore in intero con un valore di default
     static int toInt(const std::string &obj, int def)
     {
@@ -127,6 +131,10 @@ public:
         p.screen.x = round((_width / 2) + (p.screen.scale * p.camera.x * _width / 2));
         p.screen.y = round((_height / 2) - (p.screen.scale * p.camera.y * _height / 2));
         p.screen.w = round(p.screen.scale * _roadWidth * _width / 2);
+    }
+
+    static bool overlap(Rectangle player, Rectangle car) {
+        return CheckCollisionRecs(player, car);
     }
 
     // Controlla se due oggetti si sovrappongono

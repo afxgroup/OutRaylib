@@ -1,26 +1,15 @@
-#include <stdio.h>
-
 #include "raylib.h"
 
 #include "common.hpp"
 #include "util.hpp"
-#include "drawing.hpp"
 
 #include "game.hpp"
-
-#include <iostream>
-#include <cstring>
-#include <cmath>
-#include <map>
-#include <string>
-#include <chrono>
-#include <algorithm>
 
 int main()
 {
     srand(static_cast<unsigned>(time(0))); // Inizializza il generatore casuale
 
-    // Custom timming variables
+    // Custom timing variables
     double previousTime = GetTime(); // Previous time measure
     double currentTime = 0.0;        // Current time measure
     double updateDrawTime = 0.0;     // Update + Draw time
