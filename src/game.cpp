@@ -267,6 +267,9 @@ void Game::pollKeys()
     if (IsKeyPressed(KEY_M))
         audio.toggleAudio();
 
+    if (IsKeyPressed(KEY_SPACE))
+        togglePause();
+
     if (IsKeyPressed(KEY_ONE))
     {
         currentTrack++;
@@ -276,7 +279,15 @@ void Game::pollKeys()
         audio.loadTrack(tracks[currentTrack].c_str());
         audio.playTrack();
     }
+
+    PollInputEvents();
 }
+
+void Game::togglePause() {
+    paused = !paused;
+    printf("%d\n", paused);
+}
+
 
 void Game::frame()
 {
@@ -373,7 +384,11 @@ void Game::frame()
 
     renderHUD();
 
-    DrawFPS(10, height - 60);
+    if (paused) {
+        DrawRectangle(width / 2 - 100, height / 2 - 50, 200, 40, Color{0xFF, 0xFF, 0xFF, 220});
+        DrawTextEx(fontTtf, "Game Paused", (Vector2){width / 2 - 90.0f, height / 2 - 40.0f}, (float)fontTtf.baseSize, 1, BLACK);
+    }
+    DrawFPS(10, height - 30);
 
     EndDrawing();
 }

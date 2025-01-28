@@ -7931,7 +7931,7 @@ class lexer : public lexer_base<BasicJsonType>
     JSON_HEDLEY_NON_NULL(2)
     static void strtof(long double& f, const char* str, char** endptr) noexcept
     {
-        f = std::strtold(str, endptr);
+        f = strtold(str, endptr);
     }
 
     /*!
