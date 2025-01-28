@@ -1,0 +1,13 @@
+BUILD_DIR 	:= build/build_files/obj/os4
+BIN_DIR 	:= bin/os4
+CFLAGS 		:= -mcrt=clib4 -Iinclude
+LDFLAGS		:= -athread=native -mcrt=clib4
+
+all:
+	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BIN_DIR)
+	ppc-amigaos-g++ $(CFLAGS) -c src/audio.cpp -o $(BUILD_DIR)/audio.o
+	ppc-amigaos-g++ $(CFLAGS) -c src/drawing.cpp -o $(BUILD_DIR)/drawing.o
+	ppc-amigaos-g++ $(CFLAGS) -c src/game.cpp -o $(BUILD_DIR)/game.o
+	ppc-amigaos-g++ $(CFLAGS) -c src/main.cpp -o $(BUILD_DIR)/main.o
+	ppc-amigaos-g++ $(LDFLAGS) $(BUILD_DIR)/audio.o $(BUILD_DIR)/drawing.o $(BUILD_DIR)/game.o $(BUILD_DIR)/main.o -o $(BIN_DIR)/OutRaylib -lraylib -lglfw3 -lGL -lpthread -latomic
