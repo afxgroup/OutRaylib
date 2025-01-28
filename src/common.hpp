@@ -30,7 +30,7 @@ class Car
 public:
     int index;
     float offset; // Offset dell'auto sulla strada (-1 a 1)
-    float z;
+    int z;
     Sprite sprite; // Sprite dell'auto
     float speed;   // Velocità dell'auto
     float percent;
@@ -204,7 +204,12 @@ const std::vector<Sprite> PLANTS = {
     SPRITES::STUMP, SPRITES::BOULDER1, SPRITES::BOULDER2, SPRITES::BOULDER3};
 
 const std::vector<Sprite> CARS = {
-    SPRITES::CAR01, SPRITES::CAR02, SPRITES::CAR03, SPRITES::CAR04,
-    SPRITES::SEMI, SPRITES::TRUCK};
+    SPRITES::CAR01, 
+    SPRITES::CAR02, 
+    SPRITES::CAR03, 
+    SPRITES::CAR04,
+    SPRITES::SEMI, 
+    SPRITES::TRUCK
+};
 
 #endif

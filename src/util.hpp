@@ -54,7 +54,7 @@ public:
     // Restituisce un intero casuale tra min e max
     static int randomInt(int min, int max)
     {
-        return rand() % (max - min) + min;
+        return min + rand() % ((max - min) + 1);
     }
 
     // Restituisce una scelta casuale da un array

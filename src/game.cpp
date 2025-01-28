@@ -493,6 +493,9 @@ void Game::updateCars(float dt, Segment &playerSegment, float playerW)
             }
             newSegment.cars.push_back(car);
         }
+
+        //printf("Car %d: %f - %f - %f\n", car.index, car.z, car.offset, car.percent);
+
     }
 }
 
@@ -533,7 +536,7 @@ float Game::updateCarOffset(Car &car, Segment &carSegment, Segment &playerSegmen
         // Controllo collisione con altre auto
         for (const Car &otherCar : segment.cars)
         {
-            float otherCarW = otherCar.sprite.w;
+            float otherCarW = otherCar.sprite.w * SPRITE_SCALE;
             if (car.speed > otherCar.speed && Util::overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2f))
             {
                 float dir = 0.0f;
@@ -681,7 +684,7 @@ void Game::resetCars()
         float offset = static_cast<float>(rand()) / RAND_MAX * Util::randomChoice(std::vector<float>{-0.8f, 0.8f});
 
         // Calcola la posizione z casuale
-        float z = static_cast<float>(rand()) / RAND_MAX * static_cast<float>(segments.size()) * segmentLength;
+        int z = static_cast<float>(rand()) / RAND_MAX * static_cast<float>(segments.size()) * segmentLength;
 
         // Seleziona uno sprite casuale
         Sprite sprite = Util::randomChoice(CARS);

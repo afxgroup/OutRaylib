@@ -70,6 +70,11 @@ void Drawing::DrawBackground(const Texture2D &_background, int _width, int _heig
     Rectangle destRec = {static_cast<float>(destX), static_cast<float>(destY), static_cast<float>(destW), static_cast<float>(destH)};
 
     DrawTexturePro(_background, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+    if (sourceW < imageW) {
+        sourceRec = {static_cast<float>(layer.x), static_cast<float>(sourceY), static_cast<float>(imageW - sourceW), static_cast<float>(sourceH)};
+        destRec = {static_cast<float>(destW - 1), static_cast<float>(destY), static_cast<float>(_width - destW), static_cast<float>(destH)};
+        DrawTexturePro(_background, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+    }
 }
 
 // Funzione per disegnare uno sprite
