@@ -27,3 +27,9 @@ On AmigaOS4 use `make -f Makefile.os4`. clib4 is needed to compile and execute i
 
 - Some minor changes to reflect the Javascript version
 - New implementations (?)
+
+### Made with Raylib
+
+<p align="center">
+    <img alt="Made with Raylib" src="https://github.com/raysan5/raylib/raw/master/logo/raylib_logo_animation.gif" />
+</p>
