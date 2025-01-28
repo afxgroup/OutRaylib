@@ -17,7 +17,7 @@ class Drawing {
                         const Sprite& sprite, float scale, float destX, float destY, float offsetX, float offsetY, float clipY);
         // Funzione per disegnare la nebbia
         void DrawFog(int x, int y, int _width, int _height, float fogIntensity);
-        void DrawPlayer(Texture2D texture, int _width, int _height, float resolution, float roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown);
+        void DrawPlayer(Texture2D texture, int _width, int _height, float resolution, float roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown, bool paused);
 };
 
 #endif

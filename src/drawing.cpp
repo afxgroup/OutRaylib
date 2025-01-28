@@ -104,9 +104,12 @@ void Drawing::DrawFog(int x, int y, int _width, int _height, float fogIntensity)
     }
 }
 
-void Drawing::DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, float _roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown)
+void Drawing::DrawPlayer(Texture2D texture, int _width, int _height, float _resolution, float _roadWidth, float speedPercent, float scale, float destX, float destY, float steer, float updown, bool paused)
 {
     float bounce = (1.5f * Util::randomFloat() * speedPercent * _resolution) * ((rand() % 2) == 0 ? -1 : 1);
+    if (paused)
+        bounce = 0.0f;
+
     Sprite sprite;
 
     if (steer < 0)

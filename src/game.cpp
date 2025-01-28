@@ -244,50 +244,51 @@ void Game::loadImages()
 void Game::pollKeys()
 {
     keyLeft = keyRight = keyFaster = keySlower = false;
-    if (IsKeyDown(KEY_RIGHT))
-        keyRight = true;
-    else
-        keyRight = false;
+    if (!paused)
+    {
+        if (IsKeyDown(KEY_RIGHT))
+            keyRight = true;
+        else
+            keyRight = false;
 
-    if (IsKeyDown(KEY_LEFT))
-        keyLeft = true;
-    else
-        keyLeft = false;
+        if (IsKeyDown(KEY_LEFT))
+            keyLeft = true;
+        else
+            keyLeft = false;
 
-    if (IsKeyDown(KEY_UP))
-        keyFaster = true;
-    else
-        keyFaster = false;
+        if (IsKeyDown(KEY_UP))
+            keyFaster = true;
+        else
+            keyFaster = false;
 
-    if (IsKeyDown(KEY_DOWN))
-        keySlower = true;
-    else
-        keySlower = false;
+        if (IsKeyDown(KEY_DOWN))
+            keySlower = true;
+        else
+            keySlower = false;
 
-    if (IsKeyPressed(KEY_M))
-        audio.toggleAudio();
+        if (IsKeyPressed(KEY_M))
+            audio.toggleAudio();
 
+        if (IsKeyPressed(KEY_ONE))
+        {
+            currentTrack++;
+            if (currentTrack == tracks.size())
+                currentTrack = 0;
+            audio.unloadTrack();
+            audio.loadTrack(tracks[currentTrack].c_str());
+            audio.playTrack();
+        }
+    }
     if (IsKeyPressed(KEY_SPACE))
         togglePause();
-
-    if (IsKeyPressed(KEY_ONE))
-    {
-        currentTrack++;
-        if (currentTrack == tracks.size())
-            currentTrack = 0;
-        audio.unloadTrack();
-        audio.loadTrack(tracks[currentTrack].c_str());
-        audio.playTrack();
-    }
 
     PollInputEvents();
 }
 
-void Game::togglePause() {
+void Game::togglePause()
+{
     paused = !paused;
-    printf("%d\n", paused);
 }
-
 
 void Game::frame()
 {
@@ -323,8 +324,6 @@ void Game::frame()
 
         Util::project(segment.p1, (playerX * roadWidth) - x, playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
         Util::project(segment.p2, (playerX * roadWidth) - x - dx, playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
-
-        // printf("%d %f %f %f %f\n", n, segment.p1.screen.x, segment.p1.screen.y, segment.p1.screen.w, segment.p1.screen.scale);
 
         x = x + dx;
         dx = dx + segment.curve;
@@ -378,13 +377,15 @@ void Game::frame()
                                (height / 2) - (cameraDepth / playerZ * Util::interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * height / 2),
                                speed * (keyLeft ? -1 : keyRight ? 1
                                                                 : 0),
-                               playerSegment.p2.world.y - playerSegment.p1.world.y);
+                               playerSegment.p2.world.y - playerSegment.p1.world.y,
+                               paused);
         }
     }
 
     renderHUD();
 
-    if (paused) {
+    if (paused)
+    {
         DrawRectangle(width / 2 - 100, height / 2 - 50, 200, 40, Color{0xFF, 0xFF, 0xFF, 220});
         DrawTextEx(fontTtf, "Game Paused", (Vector2){width / 2 - 90.0f, height / 2 - 40.0f}, (float)fontTtf.baseSize, 1, BLACK);
     }
@@ -525,14 +526,13 @@ void Game::updateCars(float dt, Segment &playerSegment, float playerW)
             newSegment.cars.push_back(car);
         }
 
-        //printf("Car %d: %f - %f - %f\n", car.index, car.z, car.offset, car.percent);
-
+        // printf("Car %d: %f - %f - %f\n", car.index, car.z, car.offset, car.percent);
     }
 }
 
 float Game::updateCarOffset(Car &car, Segment &carSegment, Segment &playerSegment, float playerW)
 {
-    const int lookahead = 20;  // Distanza di previsione
+    const int lookahead = 20;                 // Distanza di previsione
     float carW = car.sprite.w * SPRITE_SCALE; // Larghezza dell'auto
 
     // Ottimizzazione: ignora le auto fuori dalla vista del giocatore
@@ -746,7 +746,7 @@ void Game::loadOptions(std::map<std::string, std::string> options)
     // Leggi o usa i valori di default
     width = options.count("width") ? Util::toInt(options["width"], 1024) : 1024;
     height = options.count("height") ? Util::toInt(options["height"], 768) : 768;
-    lanes = options.count("lanes") ? Util::toInt(options["lanes"],3) : 3;
+    lanes = options.count("lanes") ? Util::toInt(options["lanes"], 3) : 3;
     roadWidth = options.count("roadWidth") ? Util::toFloat(options["roadWidth"], 2000.0f) : 2000.0f;
     cameraHeight = options.count("cameraHeight") ? Util::toFloat(options["cameraHeight"], 1000.0f) : 1000.0f;
     drawDistance = options.count("drawDistance") ? Util::toInt(options["drawDistance"], 300) : 300;
