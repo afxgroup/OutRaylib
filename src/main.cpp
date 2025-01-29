@@ -5,16 +5,14 @@
 
 #include "game.hpp"
 
-int main()
-{
+int main() {
     srand(static_cast<unsigned>(time(0))); // Inizializza il generatore casuale
 
     Game game;
 
     game.init();
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()) {
         game.pollKeys();
 
         if (!game.isPaused()) {

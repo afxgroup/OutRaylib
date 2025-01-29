@@ -1,38 +1,31 @@
 #include "audio.hpp"
 
 /* Music functions */
-void Audio::init()
-{
+void Audio::init() {
     InitAudioDevice(); // Initialize audio device
 }
 
-void Audio::destroy()
-{
+void Audio::destroy() {
     CloseAudioDevice(); // Close audio device (music streaming is automatically stopped)
 }
 
-void Audio::loadTrack(const char *filename)
-{
+void Audio::loadTrack(const char *filename) {
     track = LoadMusicStream(filename);
 }
 
-void Audio::playTrack()
-{
+void Audio::playTrack() {
     PlayMusicStream(track);
 }
 
-void Audio::updateTrack()
-{
+void Audio::updateTrack() {
     UpdateMusicStream(track); // Update music buffer with new stream data
 }
 
-void Audio::unloadTrack()
-{
+void Audio::unloadTrack() {
     UnloadMusicStream(track);
 }
 
-void Audio::toggleAudio()
-{
+void Audio::toggleAudio() {
     muted = !muted;
     if (muted)
         SetMusicVolume(track, 0);

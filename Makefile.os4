@@ -1,6 +1,6 @@
 BUILD_DIR 	:= build/build_files/obj/os4
 BIN_DIR 	:= bin/os4
-CFLAGS 		:= -mcrt=clib4 -Iinclude -Wall
+CFLAGS 		:= -mcrt=clib4 -Iinclude -Wall -pedantic
 LDFLAGS		:= -athread=native -mcrt=clib4
 
 all:
