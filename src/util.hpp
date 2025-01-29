@@ -1,6 +1,8 @@
 #ifndef __UTIL_HPP__
 #define __UTIL_HPP__
 
+#define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -65,7 +67,7 @@ public:
     template <typename T>
     static T randomChoice(const std::vector<T> &options)
     {
-        return options[randomInt(0, options.size() - 1)];
+        return options[randomInt(0, static_cast<int>(options.size()) - 1)];
     }
 
     // Calcola la percentuale rimanente di n rispetto a total
@@ -89,19 +91,19 @@ public:
     // Easing in
     static float easeIn(float a, float b, float percent)
     {
-        return a + (b - a) * std::pow(percent, 2);
+        return a + (b - a) * std::pow(percent, 2.0f);
     }
 
     // Easing out
     static float easeOut(float a, float b, float percent)
     {
-        return a + (b - a) * (1 - std::pow(1 - percent, 2));
+        return a + (b - a) * (1.0f - std::pow(1 - percent, 2.0f));
     }
 
     // Easing in-out
     static float easeInOut(float a, float b, float percent)
     {
-        return a + (b - a) * ((-std::cos(percent * M_PI) / 2) + 0.5);
+        return a + (b - a) * ((-std::cos(percent * M_PI) / 2.0f) + 0.5f);
     }
 
     // Nebbia esponenziale

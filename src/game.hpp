@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "common.hpp"
 #include "util.hpp"
@@ -73,7 +74,7 @@ private:
     float fieldOfView = 100.0f;             // Angolo del campo visivo (in gradi)
     float cameraHeight = 1000.0f;           // Altezza della telecamera
     float cameraDepth = 0.0f;               // Distanza Z della telecamera (calcolata)
-    int drawDistance = 300;                 // Numero di segmenti da disegnare
+    size_t drawDistance = 300;              // Numero di segmenti da disegnare
     float playerX = 0.0f;                   // Offset X del giocatore (-1 a 1)
     float playerZ = 0.0f;                   // Distanza Z relativa del giocatore (calcolata)
     float fogDensity = 5.0f;                // Densità della nebbia
@@ -100,7 +101,7 @@ private:
 
     void renderHUD();
 
-    void addSprite(unsigned int n, Sprite sprite, float offset);
+    void addSprite(size_t n, Sprite sprite, float offset);
     void addRoad(int enter, int hold, int leave, float curve, float y);
     void addStraight(int num);
     void addHill(int num, int _height);

@@ -180,12 +180,12 @@ void Game::renderHUD() {
     DrawRectangleLines(0, 0, width, 60, BLACK);
 
     // Time
-    DrawRectangle(10, 10, 150, 40, Color{0xFF, 0xFF, 0xFF, 127});
-    DrawRectangleLines(10, 10, 150, 40, BLACK);
+    DrawRectangle(10, 10, 160, 40, Color{0xFF, 0xFF, 0xFF, 127});
+    DrawRectangleLines(10, 10, 160, 40, BLACK);
 
     // Speed
-    DrawRectangle(width - 160, 10, 150, 40, Color{0xFF, 0xFF, 0xFF, 127});
-    DrawRectangleLines(width - 160, 10, 150, 40, BLACK);
+    DrawRectangle(width - 160, 10, 160, 40, Color{0xFF, 0xFF, 0xFF, 127});
+    DrawRectangleLines(width - 160, 10, 160, 40, BLACK);
 
     // Current Lap
     DrawRectangle(width / 3 - 150, 10, 250, 40, Color{0xFF, 0xFF, 0xFF, 127});
@@ -254,7 +254,7 @@ void Game::togglePause() {
 
 void Game::frame() {
     unsigned int i;
-    int n;
+    size_t n;
     Sprite sprite;
     Car car;
     float spriteScale, spriteX, spriteY;
@@ -264,7 +264,7 @@ void Game::frame() {
     Segment &playerSegment = findSegment(position + playerZ);
     float playerPercent = Util::percentRemaining(position + playerZ, segmentLength);
     float playerY = Util::interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
-    int maxy = height;
+    float maxy = static_cast<float>(height);
 
     // Rendering
     BeginDrawing();
@@ -274,19 +274,19 @@ void Game::frame() {
     drawing.DrawBackground(background, width, height, BACKGROUND::HILLS, hillOffset, resolution * hillSpeed * playerY);
     drawing.DrawBackground(background, width, height, BACKGROUND::TREES, treeOffset, resolution * treeSpeed * playerY);
 
-    int x = 0;
+    float x = 0.0f;
     float dx = -(baseSegment.curve * basePercent);
 
     for (n = 0; n < drawDistance; n++) {
         Segment &segment = segments[(baseSegment.index + n) % segments.size()];
         segment.looped = segment.index < baseSegment.index;
-        segment.fog = Util::exponentialFog(n / drawDistance, fogDensity);
+        segment.fog = Util::exponentialFog(static_cast<float>(n / drawDistance), fogDensity);
         segment.clip = maxy;
 
         Util::project(segment.p1, (playerX * roadWidth) - x, playerY + cameraHeight,
-                      position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
+                      position - (segment.looped ? trackLength : 0.0f), cameraDepth, static_cast<float>(width), static_cast<float>(height), roadWidth);
         Util::project(segment.p2, (playerX * roadWidth) - x - dx, playerY + cameraHeight,
-                      position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
+                      position - (segment.looped ? trackLength : 0.0f), cameraDepth, static_cast<float>(width), static_cast<float>(height), roadWidth);
 
         x = x + dx;
         dx = dx + segment.curve;
@@ -329,18 +329,17 @@ void Game::frame() {
             spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * roadWidth * width / 2);
             spriteY = segment.p1.screen.y;
             drawing.DrawSprite(sprites, width, height, resolution, roadWidth, sprite, spriteScale, spriteX, spriteY,
-                               (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
+                               (sprite.offset < 0.0f ? -1.0f : 0.0f), -1, segment.clip);
         }
 
         if (&segment == &playerSegment) {
             drawing.DrawPlayer(sprites, width, height, resolution, roadWidth, speed / maxSpeed,
                                cameraDepth / playerZ,
-                               width / 2,
+                               static_cast<float>(width / 2),
                                (height / 2) - (cameraDepth / playerZ *
                                                Util::interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y,
                                                                  playerPercent) * height / 2),
-                               speed * (keyLeft ? -1 : keyRight ? 1
-                                                                : 0),
+                               speed * (keyLeft ? -1.0f : keyRight ? 1.0f : 0.0f),
                                playerSegment.p2.world.y - playerSegment.p1.world.y,
                                paused);
         }
@@ -358,7 +357,7 @@ void Game::frame() {
     EndDrawing();
 }
 
-void Game::addSprite(unsigned int n, Sprite sprite, float offset) {
+void Game::addSprite(size_t n, Sprite sprite, float offset) {
     if (n >= 0 && n < segments.size()) {
         sprite.source = {sprite.x, sprite.y, sprite.w, sprite.h};
         sprite.offset = offset;
@@ -611,7 +610,7 @@ void Game::resetRoad() {
     resetCars();
 
     // Configura il colore dei segmenti di partenza
-    int startIndex = findSegment(playerZ).index;
+    size_t startIndex = findSegment(playerZ).index;
     segments[startIndex + 2].color = START;
     segments[startIndex + 3].color = START;
 
@@ -633,7 +632,7 @@ void Game::resetCars() {
         float offset = Util::randomFloat() * Util::randomChoice(std::vector < float > {-0.8f, 0.8f});
 
         // Calcola la posizione z casuale
-        int z = Util::randomFloat() * static_cast<float>(segments.size()) * segmentLength;
+        float z = Util::randomFloat() * static_cast<float>(segments.size()) * segmentLength;
 
         // Seleziona uno sprite casuale
         Sprite sprite = Util::randomChoice(CARS);
@@ -673,7 +672,7 @@ void Game::loadOptions(std::map <std::string, std::string> options) {
     rumbleLength = options.count("rumbleLength") ? Util::toInt(options["rumbleLength"], 3) : 3;
 
     // Calcoli aggiuntivi
-    cameraDepth = 1 / std::tan((fieldOfView / 2.0f) * (M_PI / 180.0f));
+    cameraDepth = 1.0f / std::tan((fieldOfView / 2.0f) * (M_PI / 180.0f));
     playerZ = cameraHeight * cameraDepth;
     resolution = static_cast<float>(height) / 480.0f;
 
@@ -685,7 +684,7 @@ void Game::loadOptions(std::map <std::string, std::string> options) {
 
 /* Segments functions */
 void Game::addSegment(float curve, float y) {
-    int n = segments.size();
+    size_t n = segments.size();
     Segment segment;
 
     segment.index = n;

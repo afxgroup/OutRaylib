@@ -25,7 +25,7 @@ Drawing::DrawSegment(int screenWidth, int _lanes, float x1, float y1, float w1, 
     float l2 = w2 / std::max(32.0f, 8.0f * _lanes);
 
     // Disegna l'erba
-    DrawRectangle(0, y2, screenWidth, y1 - y2, color.grass);
+    DrawRectangle(0, static_cast<int>(y2), static_cast<int>(screenWidth), static_cast<int>(y1 - y2), color.grass);
 
     // Disegna il bordo (rumble strips)
     DrawPolygon(color.rumble, x1 - w1 - r1, y1, x1 - w1, y1, x2 - w2, y2, x2 - w2 - r2, y2);
@@ -61,7 +61,7 @@ void Drawing::DrawBackground(const Texture2D &_background, int _width, int _heig
     int sourceH = imageH;
 
     int destX = 0;
-    int destY = offset;
+    int destY = static_cast<int>(offset);
     int destW = static_cast<int>(_width * (static_cast<float>(sourceW) / imageW));
     int destH = _height;
 

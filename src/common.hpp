@@ -30,7 +30,7 @@ class Car
 public:
     int index;
     float offset; // Offset dell'auto sulla strada (-1 a 1)
-    int z;
+    float z;
     Sprite sprite; // Sprite dell'auto
     float speed;   // Velocità dell'auto
     float percent;
@@ -104,7 +104,7 @@ struct Point3D
 
 struct Segment
 {
-    int index;                   // Indice del segmento
+    size_t index;                // Indice del segmento
     std::vector<Car> cars;       // Auto nel segmento
     Point3D p1, p2;              // Punti del segmento
     float curve;                 // Curva del segmento
@@ -211,5 +211,9 @@ const std::vector<Sprite> CARS = {
     SPRITES::SEMI, 
     SPRITES::TRUCK
 };
+
+#ifndef M_PI
+#define M_PI       (float) 3.14159265358979323846
+#endif
 
 #endif
