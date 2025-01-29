@@ -53,6 +53,9 @@ void Game::init()
 
 void Game::destroy()
 {
+    UnloadTexture(background);
+    UnloadTexture(sprites);
+
     audio.destroy();
     UnloadFont(fontTtf);
 }
@@ -281,8 +284,6 @@ void Game::pollKeys()
     }
     if (IsKeyPressed(KEY_SPACE))
         togglePause();
-
-    PollInputEvents();
 }
 
 void Game::togglePause()
