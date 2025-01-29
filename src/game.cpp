@@ -294,7 +294,8 @@ void Game::togglePause()
 
 void Game::frame()
 {
-    int n, i;
+    unsigned int i;
+    int n;
     Sprite sprite;
     Car car;
     float spriteScale, spriteX, spriteY;
@@ -396,7 +397,7 @@ void Game::frame()
     EndDrawing();
 }
 
-void Game::addSprite(int n, Sprite sprite, float offset)
+void Game::addSprite(unsigned int n, Sprite sprite, float offset)
 {
     if (n >= 0 && n < segments.size())
     {
@@ -641,7 +642,7 @@ void Game::resetSprites()
     }
 
     // Aggiungi piante
-    for (int n = 200; n < segments.size(); n += 3)
+    for (unsigned int n = 200; n < segments.size(); n += 3)
     {
         addSprite(n, Util::randomChoice(PLANTS), Util::randomChoice(choices) * (2.0f + Util::randomFloat() * 5.0f));
     }
