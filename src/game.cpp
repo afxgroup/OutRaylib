@@ -242,6 +242,7 @@ void Game::loadImages()
     background = LoadTextureFromImage(image);                   // Image converted to texture, GPU memory (VRAM)
     image = LoadImage("resources/images/sprites.png");
     sprites = LoadTextureFromImage(image);
+    UnloadImage(image);
 }
 
 void Game::pollKeys()
